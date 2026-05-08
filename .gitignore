@@ -7,5 +7,5 @@ data/**
 .DS_Store
 .vscode/launch.json
 .gemini/
-
+.cursor/
 **/*.local.*

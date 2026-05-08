@@ -3,14 +3,13 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import { BudgetFile, TransactionData, UpdateTransactionData } from './types.js';
-import {
+import type {
   APIAccountEntity,
   APICategoryEntity,
   APICategoryGroupEntity,
   APIPayeeEntity,
-} from '@actual-app/api/@types/loot-core/src/server/api-models.js';
-import { RuleEntity, TransactionEntity } from '@actual-app/api/@types/loot-core/src/types/models/index.js';
-import { ImportTransactionEntity } from '@actual-app/api/@types/loot-core/src/types/models/import-transaction.js';
+} from '@actual-app/core/server/api-models';
+import type { ImportTransactionEntity, RuleEntity, TransactionEntity } from '@actual-app/core/types/models';
 
 const DEFAULT_DATA_DIR: string = path.resolve(os.homedir() || '.', '.actual');
 

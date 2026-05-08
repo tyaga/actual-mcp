@@ -5,6 +5,11 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { initActualApi, shutdownActualApi } from '../actual-api.js';
+import {
+  logCallToolHandlerReturned,
+  logCallToolReceived,
+  logCallToolThrew,
+} from '../utils/mcp-diagnostics.js';
 import { error, errorFromCatch } from '../utils/response.js';
 
 import * as balanceHistory from './balance-history/index.js';
@@ -81,19 +86,24 @@ export const setupTools = (server: Server, enableWrite: boolean): void => {
    * Handler for calling tools
    */
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    const { name, arguments: args } = request.params;
+    logCallToolReceived(name);
     try {
       await initActualApi();
-      const { name, arguments: args } = request.params;
 
       const tool = allTools.find((t) => t.schema.name === name);
       if (!tool) {
+        logCallToolHandlerReturned(name, true);
         return error(`Unknown tool ${name}`);
       }
 
       // @ts-expect-error: Argument type is handled by Zod schema validation
-      return await tool.handler(args);
+      const result = await tool.handler(args);
+      const isErrorResult = 'isError' in result && result.isError === true;
+      logCallToolHandlerReturned(name, isErrorResult);
+      return result;
     } catch (err) {
-      console.error(`Error executing tool ${request.params.name}:`, err);
+      logCallToolThrew(name, err);
       return errorFromCatch(err);
     } finally {
       await shutdownActualApi();

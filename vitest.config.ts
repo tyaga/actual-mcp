@@ -4,6 +4,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
+    setupFiles: ['./src/navigator-polyfill.ts'],
     environment: 'node',
     include: ['src/**/*.test.ts'],
     globals: true,

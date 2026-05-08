@@ -10,6 +10,7 @@
  * - View transactions with filtering
  * - Generate financial statistics and analysis
  */
+import './navigator-polyfill.js';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
